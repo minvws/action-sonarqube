@@ -1,4 +1,4 @@
-# SonarQube Cloud Scanner
+# SonarQube Cloud Scanner Action
 
 - The pipeline is designed to run a sonarqube cloud scanner
 - The pipeline is designed to be as generic as possible, so they can be easily reused in any project.
