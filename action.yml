@@ -1,0 +1,33 @@
+name: 'Run SonarQube scanner'
+description: 'Runs the SonarQube scanner.'
+inputs:
+  sonar-token:
+    description: 'Sonar token'
+    required: true
+  project-base-dir:
+    description: 'Set the sonar.projectBaseDir analysis property'
+    required: false
+    default: .
+  allow-run-on-fork:
+    description: 'Allow SonarQube scan to run on pull requests from forks (default: false)'
+    required: false
+    default: 'false'
+
+runs:
+  using: "composite"
+  steps:
+    - name: 'Run SonarQube scanner'
+      if: ${{ contains(github.ref, '/pull/') && (github.event.pull_request.head.repo.full_name == github.repository || inputs.allow-run-on-fork == 'true') }}
+      uses: SonarSource/sonarqube-scan-action@v5
+      env:
+        SONAR_TOKEN: ${{ inputs.sonar-token }}
+      with:
+        projectBaseDir: ${{ inputs.project-base-dir }}
+    - name: 'Run SonarQube scanner'
+      if: ${{ !contains(github.ref, '/pull/') }}
+      uses: SonarSource/sonarqube-scan-action@v5
+      env:
+        SONAR_TOKEN: ${{ inputs.sonar-token }}
+      with:
+        projectBaseDir: ${{ inputs.project-base-dir }}
+        args: -Dsonar.branch.name=${{ github.ref_name }}

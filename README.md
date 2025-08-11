@@ -1,8 +1,15 @@
-# SonarQube Cloud Scanner Action
+# SonarQube Scanner GitHub Action
 
-- The pipeline is designed to run a sonarqube cloud scanner
-- The pipeline is designed to be as generic as possible, so they can be easily reused in any project.
-- This repository is a part of the generic GitHub Actions pipeline collection that can be used in any project.
+This repository provides a reusable GitHub Action for running SonarQube scans in GitHub Workflows.
+It is designed to standardize the logic around the original [SonarQube Scanner Action](https://github.com/SonarSource/sonarqube-scan-action),
+automatically handling details such as providing the correct branch name for pull requests and checking if the pull request is a fork.
+
+## Features
+
+- Standardizes the [SonarQube Scanner Action](https://github.com/SonarSource/sonarqube-scan-action) for consistent usage across projects
+- Ability to configure the project base directory for SonarQube analysis
+- Provide branch name to the scan action when running on pull requests
+- Prevents the scan action from running on pull requests from forks by default
 
 ## Usage
 
@@ -13,7 +20,7 @@ Here is a basic example of how you can integrate it in your project.
 
 This workflow is executed automatically on push to the main branch, on a pull request and can also be executed manually from the actions tab `workflow_dispatch`.
 
-In the code below you need to replace `<sonar-token>` with the SonarQube Cloud token you want to use.
+In the code below you need to replace `${{ secrets.SONAR_TOKEN }}` with the secret that contains the SonarQube token you want to use.
 
 ```yml
 name: Run SonarCloud scanner
@@ -34,9 +41,9 @@ jobs:
 
       # Using the action
       - name: Install dependencies
-        uses: minvws/action-sonarcube-cloud/.github/actions/sonarcloud@main
+        uses: minvws/action-sonarcube-cloud@v1
         with:
-            sonar-token: <sonar-token>
+            sonar-token: ${{ secrets.SONAR_TOKEN }}
 ```
 
 </details>
@@ -45,8 +52,9 @@ jobs:
 
 The action has inputs. The inputs are:
 
-- sonar-token: the SonarQube Cloud token
+- sonar-token: the SonarQube token
 - project-base-dir: set the sonar.projectBaseDir analysis property, default is `.`
+- allow-run-on-fork: allow SonarQube scan to run on pull requests from forks (default: false)
 
 ## Contributing
 
