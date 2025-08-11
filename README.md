@@ -56,7 +56,17 @@ The action has inputs. The inputs are:
 - project-base-dir: set the sonar.projectBaseDir analysis property, default is `.`
 - allow-run-on-fork: allow SonarQube scan to run on pull requests from forks (default: false)
 
-## Contributing
+## Contribution
 
-If you want to contribute a new pipeline, please check the reusable workflow guidelines in the
-[GitHub documentation](https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow).
+If you plan to make non-trivial changes, we recommend to open an issue beforehand where we can discuss your planned changes.
+This increases the chance that we might be able to use your contribution (or it avoids doing work if there are reasons why we wouldn't be able to use it).
+
+Git commits must be signed. Please check the [Signing commits documentation on GitHub](https://docs.github.com/en/github/authenticating-to-github/signing-commits).
+
+## License
+
+This repository is released under the EUPL 1.2 license. [See LICENSE](LICENSE.txt) for details.
+
+## Part of iCore
+
+This package is part of the iCore project.
