@@ -36,7 +36,7 @@ In this basic example, the workflow is executed automatically on push to the `ma
 
 ### Configuration
 
-The action the following inputs:
+The action has the following inputs:
 
 - `sonar-token`: the SonarQube token.
 - `project-base-dir`: set the sonar.projectBaseDir analysis property, default is `.`.
