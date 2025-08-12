@@ -1,15 +1,7 @@
 # SonarQube Scanner GitHub Action
 
 This repository provides a reusable GitHub Action for running SonarQube scans in GitHub Workflows.
-It is designed to standardize the logic around the original [SonarQube Scanner Action](https://github.com/SonarSource/sonarqube-scan-action),
-automatically handling details such as providing the correct branch name for pull requests and checking if the pull request is a fork.
-
-## Features
-
-- Standardizes the [SonarQube Scanner Action](https://github.com/SonarSource/sonarqube-scan-action) for consistent usage across projects
-- Ability to configure the project base directory for SonarQube analysis
-- Provide branch name to the scan action when running on pull requests
-- Prevents the scan action from running on pull requests from forks by default
+It wraps the official [SonarQube Scanner Action](https://github.com/SonarSource/sonarqube-scan-action) to standardize details such as providing the correct branch name for pull requests and checking if the pull request is made from a fork.
 
 ## Usage
 
