@@ -8,7 +8,7 @@ It wraps the official [SonarQube Scanner Action](https://github.com/SonarSource/
 To use the action, add it to a workflow in your repository:
 
 ```yml
-name: Run SonarCloud scanner
+name: Run SonarQube scanner
 
 on:
     workflow_dispatch:
@@ -18,16 +18,16 @@ on:
             - main
 
 jobs:
-    sonarcloud-scanner:
-    runs-on: ubuntu-latest
-    steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+    sonarqube-scanner:
+      runs-on: ubuntu-latest
+      steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
 
-        - name: Run SonarQube scan
-          uses: minvws/action-sonarcube-cloud@v1
-          with:
-              sonar-token: ${{ secrets.SONAR_TOKEN }}
+          - name: Run SonarQube scan
+            uses: minvws/action-sonarqube@v1
+            with:
+                sonar-token: ${{ secrets.SONAR_TOKEN }}
 ```
 
 Make sure to add the `SONAR_TOKEN` secret to your repository's configuration. See [Using secrets in GitHub Actions](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets).
