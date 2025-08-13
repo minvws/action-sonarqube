@@ -8,7 +8,7 @@ It wraps the official [SonarQube Scanner Action](https://github.com/SonarSource/
 To use the action, add it to a workflow in your repository:
 
 ```yml
-name: Run SonarCloud scanner
+name: Run SonarQube scanner
 
 on:
     workflow_dispatch:
@@ -18,14 +18,14 @@ on:
             - main
 
 jobs:
-    sonarcloud-scanner:
+    sonarqube-scanner:
     runs-on: ubuntu-latest
     steps:
         - name: Checkout repository
           uses: actions/checkout@v4
 
         - name: Run SonarQube scan
-          uses: minvws/action-sonarcube-cloud@v1
+          uses: minvws/action-sonarqube@v1
           with:
               sonar-token: ${{ secrets.SONAR_TOKEN }}
 ```
