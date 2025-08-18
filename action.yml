@@ -12,12 +12,16 @@ inputs:
     description: 'Allow SonarQube scan to run on pull requests from forks (default: false)'
     required: false
     default: 'false'
+  allow-run-on-dependabot:
+    description: 'Allow SonarQube scan to run on pull requests created by Dependabot (default: false)'
+    required: false
+    default: 'false'
 
 runs:
   using: "composite"
   steps:
     - name: 'Run SonarQube scanner'
-      if: ${{ contains(github.ref, '/pull/') && (github.event.pull_request.head.repo.full_name == github.repository || inputs.allow-run-on-fork == 'true') }}
+      if: ${{ contains(github.ref, '/pull/') && (github.event.pull_request.head.repo.full_name == github.repository || (inputs.allow-run-on-fork == 'true' && github.actor != 'dependabot[bot]') || (inputs.allow-run-on-dependabot == 'true' && github.actor == 'dependabot[bot]')) }}
       uses: SonarSource/sonarqube-scan-action@v5
       env:
         SONAR_TOKEN: ${{ inputs.sonar-token }}
