@@ -1,33 +1,33 @@
-name: 'Run SonarQube scanner'
-description: 'Runs the SonarQube scanner.'
+name: "Run SonarQube scanner"
+description: "Runs the SonarQube scanner."
 inputs:
   sonar-token:
-    description: 'Sonar token'
+    description: "Sonar token"
     required: true
   project-base-dir:
-    description: 'Set the sonar.projectBaseDir analysis property'
+    description: "Set the sonar.projectBaseDir analysis property"
     required: false
     default: .
   allow-run-on-fork:
-    description: 'Allow SonarQube scan to run on pull requests from forks (default: false)'
+    description: "Allow SonarQube scan to run on pull requests from forks (default: false)"
     required: false
-    default: 'false'
+    default: "false"
   allow-run-on-dependabot:
-    description: 'Allow SonarQube scan to run on pull requests created by Dependabot (default: false)'
+    description: "Allow SonarQube scan to run on pull requests created by Dependabot (default: false)"
     required: false
-    default: 'false'
+    default: "false"
 
 runs:
   using: "composite"
   steps:
-    - name: 'Run SonarQube scanner'
+    - name: "Run SonarQube scanner"
       if: ${{ contains(github.ref, '/pull/') && (github.event.pull_request.head.repo.full_name == github.repository || (inputs.allow-run-on-fork == 'true' && github.actor != 'dependabot[bot]') || (inputs.allow-run-on-dependabot == 'true' && github.actor == 'dependabot[bot]')) }}
       uses: SonarSource/sonarqube-scan-action@v5
       env:
         SONAR_TOKEN: ${{ inputs.sonar-token }}
       with:
         projectBaseDir: ${{ inputs.project-base-dir }}
-    - name: 'Run SonarQube scanner'
+    - name: "Run SonarQube scanner"
       if: ${{ !contains(github.ref, '/pull/') }}
       uses: SonarSource/sonarqube-scan-action@v5
       env:
