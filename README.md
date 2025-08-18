@@ -11,23 +11,23 @@ To use the action, add it to a workflow in your repository:
 name: Run SonarQube scanner
 
 on:
-    workflow_dispatch:
-    pull_request:
-    push:
-        branches:
-            - main
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
-    sonarqube-scanner:
-      runs-on: ubuntu-latest
-      steps:
-          - name: Checkout repository
-            uses: actions/checkout@v5
+  sonarqube-scanner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
 
-          - name: Run SonarQube scan
-            uses: minvws/action-sonarqube@v1
-            with:
-                sonar-token: ${{ secrets.SONAR_TOKEN }}
+      - name: Run SonarQube scan
+        uses: minvws/action-sonarqube@v1
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
 ```
 
 Make sure to add the `SONAR_TOKEN` secret to your repository's configuration. See [Using secrets in GitHub Actions](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets).
@@ -38,9 +38,10 @@ In this basic example, the workflow is executed automatically on push to the `ma
 
 The action has the following inputs:
 
-- `sonar-token`: the SonarQube token.
-- `project-base-dir`: set the sonar.projectBaseDir analysis property, default is `.`.
-- `allow-run-on-fork`: allow SonarQube scan to run on pull requests from forks (default: false).
+- `sonar-token` (**required**): The SonarQube token.
+- `project-base-dir` (optional): Set the `sonar.projectBaseDir` analysis property. Default is `.`.
+- `allow-run-on-fork` (optional): Allow SonarQube scan to run on pull requests from forks. Default is `false`.
+- `allow-run-on-dependabot` (optional): Allow SonarQube scan to run on pull requests created by Dependabot. Default is `false`.
 
 ## Contribution
 
