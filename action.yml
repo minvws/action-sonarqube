@@ -20,15 +20,56 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "Run SonarQube scanner"
-      if: ${{ contains(github.ref, '/pull/') && (github.event.pull_request.head.repo.full_name == github.repository || (inputs.allow-run-on-fork == 'true' && github.actor != 'dependabot[bot]') || (inputs.allow-run-on-dependabot == 'true' && github.actor == 'dependabot[bot]')) }}
+    - id: check_scan
+      name: "Check if scan should run"
+      shell: bash
+      run: |
+        is_pull_request=false
+        [[ "$GITHUB_REF" =~ /pull/ ]] && is_pull_request=true
+
+        is_dependabot_actor=false
+        [[ "$GITHUB_ACTOR" == "dependabot[bot]" ]] && is_dependabot_actor=true
+
+        is_pull_request_from_fork=false
+        [[ "$is_pull_request" == "true" && "$GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME" != "$GITHUB_REPOSITORY" ]] && is_pull_request_from_fork=true
+
+        should_run_scan=true
+        # Check 1: Disallow Dependabot if not explicitly allowed
+        if [[ "$is_dependabot_actor" == "true" && "$INPUT_ALLOW_RUN_ON_DEPENDABOT" != "true" ]]; then
+          should_run_scan=false
+          echo "Skipping scan: Actor is Dependabot and 'allow-run-on-dependabot' is false."
+        fi
+
+        # Check 2: Disallow forks on pull requests if not explicitly allowed
+        if [[ "$is_pull_request_from_fork" == "true" && "$INPUT_ALLOW_RUN_ON_FORK" != "true" ]]; then
+          should_run_scan=false
+          echo "Skipping scan: Pull request is from a fork and 'allow-run-on-fork' is false."
+        fi
+
+        if [[ "$should_run_scan" == "true" ]]; then
+          echo "Scan is allowed to run."
+        fi
+
+        echo "should_run_scan=$should_run_scan" >> "$GITHUB_OUTPUT"
+        echo "is_pull_request=$is_pull_request" >> "$GITHUB_OUTPUT"
+        echo "is_dependabot_actor=$is_dependabot_actor" >> "$GITHUB_OUTPUT"
+        echo "is_pull_request_from_fork=$is_pull_request_from_fork" >> "$GITHUB_OUTPUT"
+      env:
+        INPUT_ALLOW_RUN_ON_DEPENDABOT: ${{ inputs.allow-run-on-dependabot }}
+        INPUT_ALLOW_RUN_ON_FORK: ${{ inputs.allow-run-on-fork }}
+        GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FULL_NAME: ${{ github.event.pull_request.head.repo.full_name }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_ACTOR: ${{ github.actor }}
+        GITHUB_REF: ${{ github.ref }}
+    - name: "Run SonarQube scanner (PR)"
+      if: steps.check_scan.outputs.should_run_scan == 'true' && steps.check_scan.outputs.is_pull_request == 'true'
       uses: SonarSource/sonarqube-scan-action@v5
       env:
         SONAR_TOKEN: ${{ inputs.sonar-token }}
       with:
         projectBaseDir: ${{ inputs.project-base-dir }}
-    - name: "Run SonarQube scanner"
-      if: ${{ !contains(github.ref, '/pull/') }}
+    - name: "Run SonarQube scanner (branch)"
+      if: steps.check_scan.outputs.should_run_scan == 'true' && steps.check_scan.outputs.is_pull_request == 'false'
       uses: SonarSource/sonarqube-scan-action@v5
       env:
         SONAR_TOKEN: ${{ inputs.sonar-token }}
