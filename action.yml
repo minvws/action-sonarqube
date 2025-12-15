@@ -63,14 +63,14 @@ runs:
         GITHUB_REF: ${{ github.ref }}
     - name: "Run SonarQube scanner (PR)"
       if: steps.check_scan.outputs.should_run_scan == 'true' && steps.check_scan.outputs.is_pull_request == 'true'
-      uses: SonarSource/sonarqube-scan-action@v6
+      uses: SonarSource/sonarqube-scan-action@v7
       env:
         SONAR_TOKEN: ${{ inputs.sonar-token }}
       with:
         projectBaseDir: ${{ inputs.project-base-dir }}
     - name: "Run SonarQube scanner (branch)"
       if: steps.check_scan.outputs.should_run_scan == 'true' && steps.check_scan.outputs.is_pull_request == 'false'
-      uses: SonarSource/sonarqube-scan-action@v6
+      uses: SonarSource/sonarqube-scan-action@v7
       env:
         SONAR_TOKEN: ${{ inputs.sonar-token }}
       with:
